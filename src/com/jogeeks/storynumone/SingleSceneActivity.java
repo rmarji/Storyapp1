@@ -9,6 +9,7 @@ import com.jogeeks.storynumone.R;
 import com.jogeeks.storynumone.objects.StoryPlayer;
 import com.jogeeks.storynumone.objects.TimeStamps;
 import com.jogeeks.common.Dialogs;
+import com.jogeeks.storynumone.objects.Scene;
 
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -63,6 +64,7 @@ public class SingleSceneActivity extends Activity {
 		Log.d(Float.toString(s.getSeconds()), Double.toString(s.getMinutes()));
 		
 		switch (SceneType) {
+<<<<<<< HEAD
 		case 1:
 			stopReading = false;
 			JoGeeksDialogs.showLongToast("Read it to me");
@@ -70,13 +72,17 @@ public class SingleSceneActivity extends Activity {
 			 
 			    
 //new TimeOut().execute();
-			break;
-
-		case 2:
+=======
+		case Scene.READ_IT_MYSELF:
 			JoGeeksDialogs.showLongToast("Read it myself");
+>>>>>>> 060e73f17d8b24fbf34ef5ba0109d713491b051c
 			break;
 
-		case 3:
+		case Scene.READ_IT_TO_ME:
+			JoGeeksDialogs.showLongToast("Read it to me");
+			break;
+
+		case Scene.AUTO_PLAY:
 			JoGeeksDialogs.showLongToast("Auto Play");
 			break;
 
