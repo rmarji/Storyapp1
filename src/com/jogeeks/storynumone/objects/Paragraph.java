@@ -1,9 +1,11 @@
 package com.jogeeks.storynumone.objects;
 
+import android.widget.TextView;
+
 public class Paragraph {
 	
-	private int id;
-	private String text;
+	int id;
+	String text;
 	
 	public int getId() {
 		return id;
@@ -16,7 +18,12 @@ public class Paragraph {
 	}
 	public void setText(String text) {
 		this.text = text;
+		
 	}
+	
+	TextView tv;
+	
+	
 	
 
 }
