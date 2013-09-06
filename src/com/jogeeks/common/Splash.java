@@ -9,6 +9,8 @@ import android.view.WindowManager;
 public class Splash {
 
 	private Activity splashActivity;
+	private int time;
+	private Class destinationActivity;
 	
 	public Splash(Activity splash){
 		splashActivity = splash;
@@ -20,29 +22,40 @@ public class Splash {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	}
 	
-	public void setTimeOut(int ms, Class dest){
-		
+	public void setTimeOut(int ms){
+		time = ms;
+	}
+	
+	public void setDestinationActivity(Class whereTo){
+		destinationActivity = whereTo;
+	}
+	
+	public void start(){
+		new TimeOut().execute();
+	}
+	
+	public void start(Class whereTo, int timeout){
+		time = timeout;
+		destinationActivity = whereTo;
+		new TimeOut().execute();
 	}
 	
 	
-	private class TimeOut extends AsyncTask<Parms, Void, Intent> {
+	private class TimeOut extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected Intent doInBackground(Parms... params) {
+        protected Void doInBackground(Void... params) {
                   try {
-                      Thread.sleep(1000);
+                      Thread.sleep(time);
                   } catch (InterruptedException e) {
                       // TODO Auto-generated catch block
                       e.printStackTrace();
+                  }finally{
+                	  splashActivity.startActivity(new Intent(splashActivity, destinationActivity));
+                	  splashActivity.finish();
                   }
 				return null;
         }      
-
-        @Override
-        protected void onPostExecute(Intent result) {
-
-        }
-
   }   
 	
 }

@@ -20,6 +20,9 @@ public class SplashActivity extends Activity {
 		
 		setContentView(R.layout.activity_splash);
 		
+		//parms are the destination activity and the time out in milliseconds
+		StoryAppSplash.start(MainMenuActivity.class,2000);
+		
 		
 		
 	}
