@@ -42,15 +42,16 @@ public class SingleSceneActivity extends Activity implements OnTouchListener {
 		Spannable sp = new SpannableString(s);
 
 		StringTokenizer st = new StringTokenizer(s);
-		String tkn =  st.nextToken().toString();
-		String [] words = s.split(" ")
-		while(tkn != null)
+		//String tkn =  st.nextToken().toString();
+		String [] words = s.split(" ");
+		
+		for(String word : words)
 		{
-			int start = s.indexOf(tkn);
-			sp.setSpan(new IndexedClickableSpan(start , start + tkn.length()-1), start, start + tkn.length()-1,
+			int start = s.indexOf(word);
+			sp.setSpan(new IndexedClickableSpan(start , start + word.length()), start, start + word.length(),
 					Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 			
-			tkn =  st.nextToken(" ").toString();
+			//tkn =  st.nextToken(" ").toString();
 		}
 		
 		return sp;
