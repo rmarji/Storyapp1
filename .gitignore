@@ -8,6 +8,7 @@
 bin/
 tmp/
 gen/
+res/raw/*
 *.tmp
 *.bak
 *.swp
@@ -58,6 +59,7 @@ build/
 *_i.c
 *_p.c
 *.ilk
+*.mp3
 *.meta
 *.obj
 *.pch

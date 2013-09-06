@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<maps xmlns:android="http://schemas.android.com/apk/res/android">
+    <map name="gridmap">
+        <area name="one" shape="rect" coords="118,124,219,226" id="@+id/area1001"/>
+        <area name="two" shape="rect" coords="474,374,574,476" id="@+id/area1002"/>        
+        <area name="four" shape="rect" coords="710,878,808,980" id="@+id/area1004"/>
+        <area name="red" shape="circle" coords="574,214,74" id="@+id/area1005"/>
+        <area name="blue" shape="poly" coords="250,780,250,951,405,951" id="@+id/area1006"/>
+        <area name="green" shape="poly" coords="592,502,592,730,808,730,808,502,709,502,709,603,690,603,690,502" id="@+id/area1007"/>
+    </map>
+    
+    
+    <map name="ohmiley">
+<area shape="rect" coords="9,21,76,92" id="@+id/area1" name="Innocent face"   />
+<area shape="rect" coords="14,294,75,343"  id="@+id/area2" name="Dont pedophile" />
+<area shape="rect" coords="119,20,169,70"  id="@+id/area3" name="shes getting hot"  />
+<area shape="rect" coords="219,21,269,71"  id="@+id/area4" name="she counts 18+, yup it's legal "  />
+<area shape="rect" coords="328,15,378,65"  id="@+id/area5" name="probaby her dad was around or sth, she looks nice"  />
+<area shape="rect" coords="415,17,465,67"  id="@+id/area6" name="hot"    />
+<area shape="rect" coords="411,107,461,157"  id="@+id/area7" name="hot2, yes"   />
+<area shape="rect" coords="414,225,464,275"  id="@+id/area8" name="hot everywhere"    />
+<area shape="rect" coords="513,13,563,63"  id="@+id/area10" name="bring it on bitch!"   />
+<area shape="rect" coords="522,209,572,259"  id="@+id/area11" name="or shall i?!"    />
+</map>
+</maps>
