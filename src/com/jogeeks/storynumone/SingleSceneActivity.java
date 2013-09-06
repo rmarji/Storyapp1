@@ -1,6 +1,7 @@
 package com.jogeeks.storynumone;
 
 import com.jogeeks.common.Dialogs;
+import com.jogeeks.storynumone.objects.Scene;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -21,15 +22,15 @@ public class SingleSceneActivity extends Activity {
 		SceneType = getIntent().getExtras().getInt("Scene");
 		
 		switch (SceneType) {
-		case 1:
-			JoGeeksDialogs.showLongToast("Read it to me");
-			break;
-
-		case 2:
+		case Scene.READ_IT_MYSELF:
 			JoGeeksDialogs.showLongToast("Read it myself");
 			break;
 
-		case 3:
+		case Scene.READ_IT_TO_ME:
+			JoGeeksDialogs.showLongToast("Read it to me");
+			break;
+
+		case Scene.AUTO_PLAY:
 			JoGeeksDialogs.showLongToast("Auto Play");
 			break;
 

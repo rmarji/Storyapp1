@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.jogeeks.common.Dialogs;
+import com.jogeeks.storynumone.objects.Scene;
 
 public class MainMenuActivity extends Activity {
 
@@ -80,19 +81,19 @@ public class MainMenuActivity extends Activity {
 			switch (v.getId()) {
 			case R.id.ReadItToMe:
 				startActivity(new Intent(MainMenuActivity.this,SingleSceneActivity.class)
-				.putExtra("Scene", Constants.READ_IT_TO_ME));
+				.putExtra("Scene", Scene.READ_IT_TO_ME));
 				finish();
 				break;
 
 			case R.id.ReadItMyself:
 				startActivity(new Intent(MainMenuActivity.this,SingleSceneActivity.class)
-				.putExtra("Scene", Constants.READ_IT_MYSELF));
+				.putExtra("Scene", Scene.READ_IT_MYSELF));
 				finish();
 				break;
 				
 			case R.id.AutoPlay:
 				startActivity(new Intent(MainMenuActivity.this,SingleSceneActivity.class)
-				.putExtra("Scene", Constants.AUTO_PLAY));
+				.putExtra("Scene", Scene.AUTO_PLAY));
 				finish();
 				break;
 			default:
