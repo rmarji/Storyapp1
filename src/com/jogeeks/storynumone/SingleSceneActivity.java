@@ -13,7 +13,6 @@ import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jogeeks.common.Dialogs;
 import com.jogeeks.storynumone.objects.Scene;
@@ -38,7 +37,7 @@ public class SingleSceneActivity extends Activity {
 		tv = (TextView) findViewById(R.id.textView1);
 		tv2 = (TextView) findViewById(R.id.textView2);
 		tv2.setText(applySpans(s, sp));
-		// tv2.set
+		
 		findViewById(R.id.map).setVisibility(4);
 
 		tv2.setMovementMethod(LinkMovementMethod.getInstance());
@@ -72,4 +71,43 @@ public class SingleSceneActivity extends Activity {
 		return true;
 	}
 
+	
+
+	public Spannable applySpans(String s, Spannable sp) {
+		String[] words = s.split(" ");
+		
+		int startIndex, endIndex;
+		for (String word : words) {
+			startIndex = s.indexOf(word);
+			endIndex = startIndex + word.length();
+			
+			sp.setSpan(new IndexedClickableSpan(startIndex , endIndex) {
+			} ,  startIndex, endIndex , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+			sp.setSpan(new ForegroundColorSpan(Color.YELLOW), startIndex, endIndex , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+		}
+		return sp;
+	}
+
+	private class IndexedClickableSpan extends ClickableSpan {
+
+		int startIndex, endIndex;
+		public IndexedClickableSpan(int startIndex, int endIndex){
+			this.startIndex = startIndex;
+			this.endIndex = endIndex;
+
+		}
+
+		@Override
+		public void onClick(View arg0) {
+			String word = s.substring(startIndex, endIndex);
+
+			sp.setSpan(new ForegroundColorSpan(Color.GREEN), startIndex,
+					endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			tv.setText(sp);
+			
+		}
+		
+	}
 }
