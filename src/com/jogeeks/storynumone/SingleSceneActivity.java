@@ -1,12 +1,18 @@
 package com.jogeeks.storynumone;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.sax.StartElementListener;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.SpannedString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -15,7 +21,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.jogeeks.common.Dialogs;
+import com.jogeeks.storynumone.objects.Paragraph;
 import com.jogeeks.storynumone.objects.Scene;
+import com.jogeeks.storynumone.objects.Word;
 
 public class SingleSceneActivity extends Activity {
 
@@ -23,10 +31,11 @@ public class SingleSceneActivity extends Activity {
 	private Dialogs JoGeeksDialogs;
 	TextView tv, tv2;
 
+	// TODO: delete later
+	private Paragraph par = new Paragraph(0, "hello world from jordan to hello");
+
 	String s = "Hello world ya man";
 	Spannable sp = new SpannableString(s);
-
-	
 
 	@SuppressLint("NewApi")
 	@Override
@@ -37,7 +46,7 @@ public class SingleSceneActivity extends Activity {
 		tv = (TextView) findViewById(R.id.textView1);
 		tv2 = (TextView) findViewById(R.id.textView2);
 		tv2.setText(applySpans(s, sp));
-		
+
 		findViewById(R.id.map).setVisibility(4);
 
 		tv2.setMovementMethod(LinkMovementMethod.getInstance());
@@ -71,20 +80,20 @@ public class SingleSceneActivity extends Activity {
 		return true;
 	}
 
-	
-
-	public Spannable applySpans(String s, Spannable sp) {
+	//TODO: maybe we dont need to pass the spannable object
+	public Spannable applySpans(String s, Spannable sp ) {
 		String[] words = s.split(" ");
-		
+
 		int startIndex, endIndex;
 		for (String word : words) {
 			startIndex = s.indexOf(word);
 			endIndex = startIndex + word.length();
-			
-			sp.setSpan(new IndexedClickableSpan(startIndex , endIndex) {
-			} ,  startIndex, endIndex , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-			sp.setSpan(new ForegroundColorSpan(Color.YELLOW), startIndex, endIndex , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			sp.setSpan(new IndexedClickableSpan(startIndex, endIndex) {
+			}, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+			sp.setSpan(new ForegroundColorSpan(Color.YELLOW), startIndex,
+					endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		}
 		return sp;
@@ -93,21 +102,38 @@ public class SingleSceneActivity extends Activity {
 	private class IndexedClickableSpan extends ClickableSpan {
 
 		int startIndex, endIndex;
-		public IndexedClickableSpan(int startIndex, int endIndex){
+
+		public IndexedClickableSpan(int startIndex, int endIndex) {
 			this.startIndex = startIndex;
 			this.endIndex = endIndex;
-
 		}
 
 		@Override
 		public void onClick(View arg0) {
-			String word = s.substring(startIndex, endIndex);
+			changeWordColor(
 
-			sp.setSpan(new ForegroundColorSpan(Color.GREEN), startIndex,
-					endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			tv.setText(sp);
-			
 		}
-		
+
 	}
+
+	public void changeWordColor(Paragraph p, int Wordid) {
+
+		Word wordObj = p.words.get(Wordid);
+		int startIndex = wordObj.getStartIndex();
+		int endIndex = wordObj.getEndIndex();
+
+		sp.setSpan(new ForegroundColorSpan(Color.GREEN), startIndex, endIndex,
+				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tv2.setText(sp);
+	}
+
+	public void changeWordColor(String s, int start, int end) {
+		Spannable  sp = new SpannableString(s);
+		
+		sp.setSpan(new ForegroundColorSpan(Color.GREEN), start, end,
+				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		
+		tv2.setText(sp);
+	}
+
 }

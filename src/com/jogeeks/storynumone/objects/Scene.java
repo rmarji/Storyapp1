@@ -9,8 +9,8 @@ public class Scene {
 	
 	private int id;
 	private String name;
-	private Paragraph par = new Paragraph();
-	
+	private Paragraph par = new Paragraph(0,"hello world from jordan to hello");
+
 	
 	public int getId() {
 		return id;
