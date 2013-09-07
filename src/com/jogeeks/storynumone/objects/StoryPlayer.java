@@ -77,7 +77,7 @@ public class StoryPlayer {
 								Log.d(Integer.toString(getCurrentSeconds()), Integer.toString(timings.getCurrent()));
 								if(getCurrentSeconds() == timings.getCurrent()){
 									Log.d("ssssssssssssss", "sssssssssssssss");
-									SingleSceneActivity.mImageMap.showBubble(timings.getCurrentArea());
+									//SingleSceneActivity.mImageMap.showBubble(timings.getCurrentArea());
 									timings.goToNext();
 								}
 							}

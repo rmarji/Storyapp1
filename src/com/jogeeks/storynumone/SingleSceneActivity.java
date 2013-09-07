@@ -7,12 +7,18 @@ import com.jogeeks.common.text;
 import com.jogeeks.storynumone.objects.Scene;
 
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,40 +26,27 @@ import android.view.View.OnTouchListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SingleSceneActivity extends Activity implements OnTouchListener {
+public class SingleSceneActivity extends Activity {
 
 	private int SceneType;
 	private Dialogs JoGeeksDialogs;
 	TextView tv, tv2;
 
-	@Override
-	public boolean onTouch(View arg0, MotionEvent arg1) {
-
-		text txt = new text();
-		tv2.setText(Integer.toString(txt.getOffsetForPosition(tv, arg1.getX(),
-				arg1.getY())));
-
-		return false;
-	}
-
 	String s = "Hello world ya man";
+	Spannable sp = new SpannableString(s);
 
-	public Spannable applySpans(String s) {
-		Spannable sp = new SpannableString(s);
+	public Spannable applySpans(String s, Spannable sp) {
+		String[] words = s.split(" ");
 
-		StringTokenizer st = new StringTokenizer(s);
-		//String tkn =  st.nextToken().toString();
-		String [] words = s.split(" ");
-		
-		for(String word : words)
-		{
+		for (String word : words) {
 			int start = s.indexOf(word);
-			sp.setSpan(new IndexedClickableSpan(start , start + word.length()), start, start + word.length(),
+			sp.setSpan(new IndexedClickableSpan(start, start + word.length()),
+					start, start + word.length(),
 					Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			
-			//tkn =  st.nextToken(" ").toString();
+			sp.setSpan(new ForegroundColorSpan(Color.YELLOW), start, start
+					+ word.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
 		}
-		
 		return sp;
 	}
 
@@ -71,9 +64,16 @@ public class SingleSceneActivity extends Activity implements OnTouchListener {
 			String word = s.substring(startIndex, endIndex);
 			Toast.makeText(getApplicationContext(), "You clicked on " + word,
 					Toast.LENGTH_SHORT).show();
+			// s = Html.fromHtml(s.replace(word, "<font color=\"red\">" + word+
+			// "</font>")).toString();
+			// tv.setText(s);
+			sp.setSpan(new ForegroundColorSpan(Color.GREEN), startIndex,endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			tv2.setText(sp);
+
 		}
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,9 +81,10 @@ public class SingleSceneActivity extends Activity implements OnTouchListener {
 
 		tv = (TextView) findViewById(R.id.textView1);
 		tv2 = (TextView) findViewById(R.id.textView2);
-		tv2.setText(applySpans(s));
-		
-		tv.setOnTouchListener(this);
+		tv2.setText(applySpans(s, sp));
+		// tv2.set
+		findViewById(R.id.map).setVisibility(4);
+
 		tv2.setMovementMethod(LinkMovementMethod.getInstance());
 
 		JoGeeksDialogs = new Dialogs(getApplicationContext());

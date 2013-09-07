@@ -9,7 +9,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SingleSceneActivity" >
 
-<<<<<<< HEAD
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -31,13 +30,13 @@
         android:layout_marginTop="92dp"
         android:text="TextView"
         android:textSize="25sp" />
-=======
+
     <com.jogeeks.common.ImageMap
         android:id="@+id/map"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:src="@drawable/ohmileys"
         ctc:map="ohmiley" />
->>>>>>> 38d470e6a5b3dc48f0a47a33c31f2c9c345e6e9b
+
 
 </RelativeLayout>
