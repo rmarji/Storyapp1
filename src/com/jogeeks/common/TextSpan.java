@@ -10,61 +10,33 @@ import android.widget.TextView;
 
 public class TextSpan {
 
-	public Spannable applySpans(String s, Spannable sp, TextView tv) {
+	public Spannable applySpans(String s, final Spannable sp, final TextView tv) {
 		String[] words = s.split(" ");
-		int startIndex, endIndex;
+		int startIndex;
+		int endIndex;
 		
 		for (String word : words) {
 			startIndex = s.indexOf(word);
 			endIndex = startIndex + word.length();
 			
-			sp.s
 			sp.setSpan(new ClickableSpan() {
-				
 				@Override
 				public void onClick(View arg0) {
 					
+					String word = s.substring(startIndex, endIndex);
+
+					sp.setSpan(new ForegroundColorSpan(Color.GREEN), startIndex,
+							endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					tv.setText(sp);
 					
 				}
 			} ,  startIndex, endIndex , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-			sp.setSpan(new ForegroundColorSpan(Color.YELLOW), start, start
-					+ word.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			sp.setSpan(new ForegroundColorSpan(Color.YELLOW), startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		}
 		return sp;
 	}
-
-	private final class IndexedClickableSpan extends ClickableSpan {
-
-		
-		TextView tv;
-		String s;
-		Spannable sp;
-
-		public IndexedClickableSpan(int startIndex, int endIndex, TextView tv,
-				String s, Spannable sp) {
-			this.startIndex = startIndex;
-			this.endIndex = endIndex;
-			this.tv = tv;
-			this.s = s;
-			this.sp = sp;
-
-		}
-
-		@Override
-		public void onClick(View widget) {
-
-			String word = s.substring(startIndex, endIndex);
-			
-			sp.setSpan(new ForegroundColorSpan(Color.GREEN), startIndex,
-					endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			tv.setText(sp);
-
-		}
-	}
-
-	/* end inner class for text spanning */
 
 	public int getOffsetForPosition(TextView textView, float x, float y) {
 		if (textView.getLayout() == null) {
