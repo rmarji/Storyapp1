@@ -1,5 +1,15 @@
 package com.jogeeks.storynumone.objects;
 
-public class ClickableWordTextView {
+import android.content.Context;
+import android.widget.TextView;
 
+public class ClickableWordTextView extends TextView{
+
+	public ClickableWordTextView(Context context) {
+		super(context);
+		this.
+		
+	}
+
+	
 }
