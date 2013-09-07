@@ -45,7 +45,8 @@ public class SingleSceneActivity extends Activity {
 
 		tv = (TextView) findViewById(R.id.textView1);
 		tv2 = (TextView) findViewById(R.id.textView2);
-		tv2.setText(applySpans(s, sp));
+		
+		applySpans(s,tv);
 
 		findViewById(R.id.map).setVisibility(4);
 
@@ -80,8 +81,8 @@ public class SingleSceneActivity extends Activity {
 		return true;
 	}
 
-	//TODO: maybe we dont need to pass the spannable object
-	public Spannable applySpans(String s, Spannable sp ) {
+	public void applySpans(String s, TextView TempTV) {
+		Spannable sp = new SpannableString(s);
 		String[] words = s.split(" ");
 
 		int startIndex, endIndex;
@@ -96,7 +97,9 @@ public class SingleSceneActivity extends Activity {
 					endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		}
-		return sp;
+
+		// apply the modifications to the textview we are workin on
+		TempTV.setText(sp);
 	}
 
 	private class IndexedClickableSpan extends ClickableSpan {
@@ -110,12 +113,14 @@ public class SingleSceneActivity extends Activity {
 
 		@Override
 		public void onClick(View arg0) {
-			changeWordColor(
+			changeWordColor(s, 0, 1);
 
 		}
 
 	}
 
+	// TODO: custom textview that has the proprites and onclick listners we have
+	// their
 	public void changeWordColor(Paragraph p, int Wordid) {
 
 		Word wordObj = p.words.get(Wordid);
@@ -128,11 +133,11 @@ public class SingleSceneActivity extends Activity {
 	}
 
 	public void changeWordColor(String s, int start, int end) {
-		Spannable  sp = new SpannableString(s);
-		
+		Spannable sp = new SpannableString(s);
+
 		sp.setSpan(new ForegroundColorSpan(Color.GREEN), start, end,
 				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		
+
 		tv2.setText(sp);
 	}
 
