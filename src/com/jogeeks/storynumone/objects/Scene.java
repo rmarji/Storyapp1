@@ -2,10 +2,8 @@ package com.jogeeks.storynumone.objects;
 
 public class Scene {
 
-<<<<<<< HEAD
 	Paragraph par = new Paragraph();
 
-=======
 	//Scene types
 	public static final int READ_IT_MYSELF = 1;
 	public static final int READ_IT_TO_ME = 2;
@@ -37,5 +35,4 @@ public class Scene {
 	
 	
 	
->>>>>>> 060e73f17d8b24fbf34ef5ba0109d713491b051c
 }
