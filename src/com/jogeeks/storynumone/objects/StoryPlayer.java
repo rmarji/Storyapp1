@@ -38,6 +38,11 @@ public class StoryPlayer {
 		start();
 	}
 	
+	public void playAt(int time){
+		player.seekTo(time);
+		player.start();
+	}
+	
 	public int getCurrentMilliseconds(){
 		return player.getCurrentPosition();
 	} 
@@ -73,10 +78,9 @@ public class StoryPlayer {
 	            {
 			   			activity.runOnUiThread(new Runnable() {
 							public void run() {
-								Log.d("dddddddddddd", "ddddddddddddddd");
 								Log.d(Integer.toString(getCurrentSeconds()), Integer.toString(timings.getCurrent()));
 								if(getCurrentSeconds() == timings.getCurrent()){
-									Log.d("ssssssssssssss", "sssssssssssssss");
+									
 									//SingleSceneActivity.mImageMap.showBubble(timings.getCurrentArea());
 									timings.goToNext();
 								}
