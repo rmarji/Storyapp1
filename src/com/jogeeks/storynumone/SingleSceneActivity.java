@@ -1,81 +1,98 @@
 package com.jogeeks.storynumone;
 
-import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.StringTokenizer;
 
-import com.jogeeks.common.ImageMap;
-import com.jogeeks.storynumone.R;
-import com.jogeeks.storynumone.objects.StoryPlayer;
-import com.jogeeks.storynumone.objects.TimeStamps;
 import com.jogeeks.common.Dialogs;
+import com.jogeeks.common.text;
 import com.jogeeks.storynumone.objects.Scene;
 
-import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Intent;
-import android.util.Log;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.Menu;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AnimationSet;
-import android.view.animation.ScaleAnimation;
-import android.widget.MediaController;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class SingleSceneActivity extends Activity {
+public class SingleSceneActivity extends Activity implements OnTouchListener {
 
 	private int SceneType;
 	private Dialogs JoGeeksDialogs;
-	public static ImageMap mImageMap;
-	private boolean stopReading = true;
-	
-	public static int counter = 0;
-	int[] timeStamps = new int[] { R.id.area1, R.id.area2, R.id.area3, R.id.area4, R.id.area5, 
-			R.id.area6, R.id.area7, R.id.area8, R.id.area10, R.id.area11};
+	TextView tv, tv2;
+
+	@Override
+	public boolean onTouch(View arg0, MotionEvent arg1) {
+
+		text txt = new text();
+		tv2.setText(Integer.toString(txt.getOffsetForPosition(tv, arg1.getX(),
+				arg1.getY())));
+
+		return false;
+	}
+
+	String s = "Hello world ya man";
+
+	public Spannable applySpans(String s) {
+		Spannable sp = new SpannableString(s);
+
+		StringTokenizer st = new StringTokenizer(s);
+		//String tkn =  st.nextToken().toString();
+		String [] words = s.split(" ");
+		
+		for(String word : words)
+		{
+			int start = s.indexOf(word);
+			sp.setSpan(new IndexedClickableSpan(start , start + word.length()), start, start + word.length(),
+					Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			
+			//tkn =  st.nextToken(" ").toString();
+		}
+		
+		return sp;
+	}
+
+	private final class IndexedClickableSpan extends ClickableSpan {
+
+		int startIndex, endIndex;
+
+		public IndexedClickableSpan(int startIndex, int endIndex) {
+			this.startIndex = startIndex;
+			this.endIndex = endIndex;
+		}
+
+		@Override
+		public void onClick(View widget) {
+			String word = s.substring(startIndex, endIndex);
+			Toast.makeText(getApplicationContext(), "You clicked on " + word,
+					Toast.LENGTH_SHORT).show();
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_single_shot);
+
+		tv = (TextView) findViewById(R.id.textView1);
+		tv2 = (TextView) findViewById(R.id.textView2);
+		tv2.setText(applySpans(s));
 		
-		mImageMap = (ImageMap)findViewById(R.id.map);
-        
+		tv.setOnTouchListener(this);
+		tv2.setMovementMethod(LinkMovementMethod.getInstance());
+
 		JoGeeksDialogs = new Dialogs(getApplicationContext());
-		
+
 		SceneType = getIntent().getExtras().getInt("Scene");
-		
-		TimeStamps ss = new TimeStamps();
-		ss.add(R.id.area1, 5);
-		ss.add(R.id.area2, 7);
-		ss.add(R.id.area3, 9);
-		ss.add(R.id.area4, 11);
-		
-		StoryPlayer s = new StoryPlayer(getApplicationContext(), this, R.raw.aa,mImageMap,ss);
-		try {
-			s.play();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Log.d(Float.toString(s.getSeconds()), Double.toString(s.getMinutes()));
-		
+
 		switch (SceneType) {
-<<<<<<< HEAD
-		case 1:
-			stopReading = false;
-			JoGeeksDialogs.showLongToast("Read it to me");
-			
-			 
-			    
-//new TimeOut().execute();
-=======
 		case Scene.READ_IT_MYSELF:
 			JoGeeksDialogs.showLongToast("Read it myself");
->>>>>>> 060e73f17d8b24fbf34ef5ba0109d713491b051c
 			break;
 
 		case Scene.READ_IT_TO_ME:
@@ -89,62 +106,13 @@ public class SingleSceneActivity extends Activity {
 		default:
 			break;
 		}
-		
-        
-        
-        // add a click handler to react when areas are tapped
-        mImageMap.addOnImageMapClickedHandler(new ImageMap.OnImageMapClickedHandler() {
-			@Override
-			public void onImageMapClicked(int id) {
-				// when the area is tapped, show the name in a 
-				// text bubble
-				mImageMap.showBubble(id);
-			}
-
-			@Override
-			public void onBubbleClicked(int id) {
-				// react to info bubble for area being tapped
-			}
-		});
-        
-        
-//        AnimationSet animSet = new AnimationSet(false);
-//
-//        ScaleAnimation zoom = new ScaleAnimation(20,5, 20, 5);
-//        animSet.addAnimation(zoom);
-//        animSet.setRepeatCount(0); 
-//        animSet.setDuration(5000); 
-//        animSet.setFillAfter(true); 
-//        animSet.setInterpolator(new AccelerateDecelerateInterpolator()); 
-//        
-//        mImageMap.setAnimation(animSet);
-//
-//        animSet.start();
-        
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.single_shot, menu);
-
 		return true;
 	}
-	
-	
-	private class TimeOut extends AsyncTask<Void, Void, Void> {
 
-        @Override
-        protected Void doInBackground(Void... params) {
-			runOnUiThread(new Runnable() {  
-			    public void run() {
-					 
-
-			    }
-			});
-				return null;
-        }      
-  }   
-	
-	
 }
