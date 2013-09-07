@@ -36,8 +36,14 @@ public class SingleSceneActivity extends Activity {
 
 		tv = (TextView) findViewById(R.id.textView1);
 		tv2 = (TextView) findViewById(R.id.textView2);
+<<<<<<< HEAD
 		tv2.setText(applySpans(s, sp));
 		
+=======
+		
+		applySpans(s,tv);
+
+>>>>>>> 28078a218f18204b35f5cef512c42c74d47f8c6e
 		findViewById(R.id.map).setVisibility(4);
 
 		tv2.setMovementMethod(LinkMovementMethod.getInstance());
@@ -71,7 +77,12 @@ public class SingleSceneActivity extends Activity {
 		return true;
 	}
 
+<<<<<<< HEAD
 	public Spannable applySpans(String s, Spannable sp) {
+=======
+	public void applySpans(String s, TextView TempTV) {
+		Spannable sp = new SpannableString(s);
+>>>>>>> 28078a218f18204b35f5cef512c42c74d47f8c6e
 		String[] words = s.split(" ");
 		
 		int startIndex, endIndex;
@@ -85,7 +96,9 @@ public class SingleSceneActivity extends Activity {
 			sp.setSpan(new ForegroundColorSpan(Color.YELLOW), startIndex, endIndex , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		}
-		return sp;
+
+		// apply the modifications to the textview we are workin on
+		TempTV.setText(sp);
 	}
 
 	private class IndexedClickableSpan extends ClickableSpan {
@@ -99,13 +112,43 @@ public class SingleSceneActivity extends Activity {
 
 		@Override
 		public void onClick(View arg0) {
+<<<<<<< HEAD
 			String word = s.substring(startIndex, endIndex);
+=======
+			changeWordColor(s, 0, 1);
+>>>>>>> 28078a218f18204b35f5cef512c42c74d47f8c6e
 
 			sp.setSpan(new ForegroundColorSpan(Color.GREEN), startIndex,
 					endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 			tv.setText(sp);
 			
 		}
+<<<<<<< HEAD
 		
+=======
+
+	}
+
+	// TODO: custom textview that has the proprites and onclick listners we have
+	// their
+	public void changeWordColor(Paragraph p, int Wordid) {
+
+		Word wordObj = p.words.get(Wordid);
+		int startIndex = wordObj.getStartIndex();
+		int endIndex = wordObj.getEndIndex();
+
+		sp.setSpan(new ForegroundColorSpan(Color.GREEN), startIndex, endIndex,
+				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tv2.setText(sp);
+	}
+
+	public void changeWordColor(String s, int start, int end) {
+		Spannable sp = new SpannableString(s);
+
+		sp.setSpan(new ForegroundColorSpan(Color.GREEN), start, end,
+				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+		tv2.setText(sp);
+>>>>>>> 28078a218f18204b35f5cef512c42c74d47f8c6e
 	}
 }
