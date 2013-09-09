@@ -20,16 +20,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.jogeeks.common.Dialogs;
-<<<<<<< HEAD
 import com.jogeeks.common.ImageMap;
 import com.jogeeks.storynumone.objects.Paragraph;
 import com.jogeeks.storynumone.objects.Scene;
 import com.jogeeks.storynumone.objects.StoryPlayer;
 import com.jogeeks.storynumone.objects.TimeStamp;
-=======
 import com.jogeeks.storynumone.objects.Paragraph;
 import com.jogeeks.storynumone.objects.Scene;
->>>>>>> 3af1ebc64036d3ca50969ad237fac9992ef18b12
 import com.jogeeks.storynumone.objects.Word;
 
 public class SingleSceneActivity extends Activity {
@@ -40,13 +37,10 @@ public class SingleSceneActivity extends Activity {
 
 	private ImageMap imageMap;
 
-<<<<<<< HEAD
 	public StoryPlayer play;
 	public Scene scene;
 	private Spannable sp;
 	
-=======
->>>>>>> 3af1ebc64036d3ca50969ad237fac9992ef18b12
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +48,6 @@ public class SingleSceneActivity extends Activity {
 		setContentView(R.layout.activity_single_shot);
 
 		tv2 = (TextView) findViewById(R.id.textView2);
-<<<<<<< HEAD
 		
 		scene = new Scene(this);
 		
@@ -80,10 +73,8 @@ public class SingleSceneActivity extends Activity {
 		
 	//	applySpans(s,tv2);
 
-=======
 
-		applySpans(s, tv);
->>>>>>> 3af1ebc64036d3ca50969ad237fac9992ef18b12
+		applySpans(tv2);
 		findViewById(R.id.map).setVisibility(4);
 
 		tv2.setMovementMethod(LinkMovementMethod.getInstance());
@@ -118,7 +109,6 @@ public class SingleSceneActivity extends Activity {
 
 	}
 
-<<<<<<< HEAD
 	public Spannable applySpans(TextView TempTV) {
 		
 		String textviewString = TempTV.getText().toString();
@@ -129,17 +119,9 @@ public class SingleSceneActivity extends Activity {
 		Word[] wordwords = new Word[100];
 
 		int startIndex, endIndex =0;
-=======
-	public void applySpans(String s, TextView TempTV) {
-		Spannable sp = new SpannableString(s);
-		String[] words = s.split(" ");
-
-		int startIndex, endIndex;
->>>>>>> 3af1ebc64036d3ca50969ad237fac9992ef18b12
 		for (String word : words) {
 			startIndex = textviewString.indexOf(word, endIndex);
 			endIndex = startIndex + word.length();
-<<<<<<< HEAD
 			
 			Log.d(word, Integer.toString(startIndex)+", " + Integer.toString(endIndex));
 			wordwords[counter] = new Word(counter, word, startIndex, endIndex) ;
@@ -148,14 +130,6 @@ public class SingleSceneActivity extends Activity {
 			} ,  startIndex, endIndex , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 			//sp.setSpan(new ForegroundColorSpan(Color.YELLOW), startIndex, endIndex , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-=======
-
-			sp.setSpan(new IndexedClickableSpan(startIndex, endIndex) {
-			}, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-			sp.setSpan(new ForegroundColorSpan(Color.YELLOW), startIndex,
-					endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
->>>>>>> 3af1ebc64036d3ca50969ad237fac9992ef18b12
 
 		}
 
@@ -166,14 +140,9 @@ public class SingleSceneActivity extends Activity {
 	private class IndexedClickableSpan extends ClickableSpan {
 
 		int startIndex, endIndex;
-<<<<<<< HEAD
 		String string;
 		Spannable sp;
 		public IndexedClickableSpan(Spannable s, String string, int startIndex, int endIndex){
-=======
-
-		public IndexedClickableSpan(int startIndex, int endIndex) {
->>>>>>> 3af1ebc64036d3ca50969ad237fac9992ef18b12
 			this.startIndex = startIndex;
 			this.endIndex = endIndex;
 			this.string = string;
@@ -183,7 +152,6 @@ public class SingleSceneActivity extends Activity {
 
 		@Override
 		public void onClick(View arg0) {
-<<<<<<< HEAD
 
 			String word = string.substring(startIndex, endIndex);
 
@@ -191,17 +159,14 @@ public class SingleSceneActivity extends Activity {
 					
 			tv2.setText(changeWordColor(changeWordSize(sp, startIndex, endIndex, 2), startIndex, endIndex, Color.GREEN));
 			
-		}
-=======
-			changeWordColor(s, 0, 1);
+			changeWordColor(sp, startIndex, endIndex, Color.GREEN);
 
 			sp.setSpan(new ForegroundColorSpan(Color.GREEN), startIndex,
 					endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			tv.setText(sp);
+			tv2.setText(sp);
 
 		}
 
->>>>>>> 3af1ebc64036d3ca50969ad237fac9992ef18b12
 	}
 
 	public Spannable changeWordColor(Spannable sp, int start, int end, int color) {
@@ -213,11 +178,6 @@ public class SingleSceneActivity extends Activity {
 	public Spannable changeWordSize(Spannable sp, int start, int end, float prop) {
 		sp.setSpan(new ScaleXSpan(prop), start, end,
 				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-<<<<<<< HEAD
 		return sp;
-=======
-
-		tv2.setText(sp);
->>>>>>> 3af1ebc64036d3ca50969ad237fac9992ef18b12
 	}
 }
