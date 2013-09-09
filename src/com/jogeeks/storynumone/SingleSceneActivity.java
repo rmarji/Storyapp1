@@ -1,5 +1,8 @@
 package com.jogeeks.storynumone;
 
+import java.io.IOException;
+import java.util.StringTokenizer;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
@@ -10,40 +13,64 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.ScaleXSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
 import com.jogeeks.common.Dialogs;
+import com.jogeeks.common.ImageMap;
+import com.jogeeks.storynumone.objects.Paragraph;
 import com.jogeeks.storynumone.objects.Scene;
+import com.jogeeks.storynumone.objects.StoryPlayer;
+import com.jogeeks.storynumone.objects.TimeStamp;
+import com.jogeeks.storynumone.objects.Word;
 
 public class SingleSceneActivity extends Activity {
 
 	private int SceneType;
 	private Dialogs JoGeeksDialogs;
-	TextView tv, tv2;
+	public static TextView tv2;
 
-	String s = "Hello world ya man";
-	Spannable sp = new SpannableString(s);
+	private ImageMap imageMap;
 
+	public StoryPlayer play;
+	public Scene scene;
+	private Spannable sp;
 	
-
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_single_shot);
 
-		tv = (TextView) findViewById(R.id.textView1);
 		tv2 = (TextView) findViewById(R.id.textView2);
-<<<<<<< HEAD
-		tv2.setText(applySpans(s, sp));
 		
-=======
+		scene = new Scene(this);
 		
-		applySpans(s,tv);
+		tv2.setText(scene.getParagraph().getText());
+		tv2.setText(applySpans(tv2));
+		
+		//must be set here
+		scene.setSpannableText(sp);
 
->>>>>>> 28078a218f18204b35f5cef512c42c74d47f8c6e
+
+
+		play = new StoryPlayer(this, scene);
+
+		try {
+			play.play();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	//	applySpans(s,tv2);
+
 		findViewById(R.id.map).setVisibility(4);
 
 		tv2.setMovementMethod(LinkMovementMethod.getInstance());
@@ -75,80 +102,71 @@ public class SingleSceneActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.single_shot, menu);
 		return true;
+
 	}
 
-<<<<<<< HEAD
-	public Spannable applySpans(String s, Spannable sp) {
-=======
-	public void applySpans(String s, TextView TempTV) {
-		Spannable sp = new SpannableString(s);
->>>>>>> 28078a218f18204b35f5cef512c42c74d47f8c6e
-		String[] words = s.split(" ");
+	public Spannable applySpans(TextView TempTV) {
 		
-		int startIndex, endIndex;
+		String textviewString = TempTV.getText().toString();
+		sp = new SpannableString(textviewString);
+		
+		String[] words = textviewString.split(" ");
+		int counter = 0;
+		Word[] wordwords = new Word[100];
+
+		int startIndex, endIndex =0;
 		for (String word : words) {
-			startIndex = s.indexOf(word);
+			startIndex = textviewString.indexOf(word, endIndex);
 			endIndex = startIndex + word.length();
 			
-			sp.setSpan(new IndexedClickableSpan(startIndex , endIndex) {
+			Log.d(word, Integer.toString(startIndex)+", " + Integer.toString(endIndex));
+			wordwords[counter] = new Word(counter, word, startIndex, endIndex) ;
+			
+					sp.setSpan(new IndexedClickableSpan(sp, textviewString, startIndex , endIndex) {
 			} ,  startIndex, endIndex , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-			sp.setSpan(new ForegroundColorSpan(Color.YELLOW), startIndex, endIndex , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			//sp.setSpan(new ForegroundColorSpan(Color.YELLOW), startIndex, endIndex , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		}
 
 		// apply the modifications to the textview we are workin on
-		TempTV.setText(sp);
-	}
+		return sp;
+}
 
 	private class IndexedClickableSpan extends ClickableSpan {
 
 		int startIndex, endIndex;
-		public IndexedClickableSpan(int startIndex, int endIndex){
+		String string;
+		Spannable sp;
+		public IndexedClickableSpan(Spannable s, String string, int startIndex, int endIndex){
 			this.startIndex = startIndex;
 			this.endIndex = endIndex;
+			this.string = string;
+			sp = s;
 
 		}
 
 		@Override
 		public void onClick(View arg0) {
-<<<<<<< HEAD
-			String word = s.substring(startIndex, endIndex);
-=======
-			changeWordColor(s, 0, 1);
->>>>>>> 28078a218f18204b35f5cef512c42c74d47f8c6e
 
-			sp.setSpan(new ForegroundColorSpan(Color.GREEN), startIndex,
-					endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			tv.setText(sp);
+			String word = string.substring(startIndex, endIndex);
+
+			Log.d(word, Integer.toString(play.getCurrentMilliseconds()));
+					
+			tv2.setText(changeWordColor(changeWordSize(sp, startIndex, endIndex, 2), startIndex, endIndex, Color.GREEN));
 			
 		}
-<<<<<<< HEAD
-		
-=======
-
 	}
 
-	// TODO: custom textview that has the proprites and onclick listners we have
-	// their
-	public void changeWordColor(Paragraph p, int Wordid) {
-
-		Word wordObj = p.words.get(Wordid);
-		int startIndex = wordObj.getStartIndex();
-		int endIndex = wordObj.getEndIndex();
-
-		sp.setSpan(new ForegroundColorSpan(Color.GREEN), startIndex, endIndex,
+	public Spannable changeWordColor(Spannable sp, int start, int end, int color) {
+		sp.setSpan(new ForegroundColorSpan(color), start, end,
 				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		tv2.setText(sp);
+		return sp;
 	}
-
-	public void changeWordColor(String s, int start, int end) {
-		Spannable sp = new SpannableString(s);
-
-		sp.setSpan(new ForegroundColorSpan(Color.GREEN), start, end,
+	
+	public Spannable changeWordSize(Spannable sp, int start, int end, float prop) {
+		sp.setSpan(new ScaleXSpan(prop), start, end,
 				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-		tv2.setText(sp);
->>>>>>> 28078a218f18204b35f5cef512c42c74d47f8c6e
+		return sp;
 	}
 }

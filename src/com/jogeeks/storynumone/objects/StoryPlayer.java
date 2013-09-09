@@ -4,43 +4,56 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.jogeeks.common.ImageMap;
-import com.jogeeks.storynumone.SingleSceneActivity;
-
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
+import com.jogeeks.common.ImageMap;
+import com.jogeeks.storynumone.Constants;
+import com.jogeeks.storynumone.SingleSceneActivity;
+
 public class StoryPlayer {
+	private Scene scene;
 	private Context context;
 	private Activity activity;
 	private ImageMap map;
+	private Spannable spaned;
 	
 	private int RESOURCE;
 	private MediaPlayer player;
 	
 	private int duration;
 	
-	private TimeStamps timings;
+	private TimeStamp timings;
 	
-	public StoryPlayer(Context con, Activity act, int file, ImageMap map, TimeStamps timestamps){
-		context = con;
+	public StoryPlayer(Activity act, Scene sce){
+		scene = sce;
 		activity = act;
-		RESOURCE = file;
-		player = MediaPlayer.create(context, RESOURCE);
+		RESOURCE = Constants.Resources.get(scene.getId());
+		
+		player = MediaPlayer.create(act.getApplicationContext(), Constants.Resources.get(scene.getId()));
 		duration = player.getDuration();
-		timings = timestamps;
+		timings = scene.getTags();
+		spaned = scene.getSpanableText();
 	}
 	
 	public void play() throws IllegalStateException, IOException{
 		player.start();
+		
 		start();
 	}
 	
 	public void playAt(int time){
+		time = time * 1000;
 		player.seekTo(time);
 		player.start();
+		start();
 	}
 	
 	public int getCurrentMilliseconds(){
@@ -78,17 +91,17 @@ public class StoryPlayer {
 	            {
 			   			activity.runOnUiThread(new Runnable() {
 							public void run() {
-								Log.d(Integer.toString(getCurrentSeconds()), Integer.toString(timings.getCurrent()));
+								//Log.d(Integer.toString(getCurrentSeconds()), Integer.toString(timings.getCurrent()));
 								if(getCurrentSeconds() == timings.getCurrent()){
-									
-									//SingleSceneActivity.mImageMap.showBubble(timings.getCurrentArea());
+									//Log.d("Yay",timings.getCurrentWord().getText().toString());
+									spaned.setSpan(new ForegroundColorSpan(Color.GREEN),
+											timings.getCurrentWord().getStartIndex(), timings.getCurrentWord().getEndIndex(),
+											Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+									SingleSceneActivity.tv2.setText(spaned);
 									timings.goToNext();
 								}
 							}
 						});
-			   		
-			
-			   		
 	            }
 	        }, 1000, 1000);
 	}

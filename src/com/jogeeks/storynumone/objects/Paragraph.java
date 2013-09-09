@@ -2,6 +2,7 @@ package com.jogeeks.storynumone.objects;
 
 import java.util.ArrayList;
 
+import android.text.Spannable;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -10,7 +11,8 @@ public class Paragraph {
 	int id;
 	String text;
 	public ArrayList<Word> words = new ArrayList<Word>();
-
+	public Spannable sp;
+	
 	public Paragraph(int id, String text) {
 		this.id = id;
 		this.text = text;
@@ -28,7 +30,7 @@ public class Paragraph {
 			Log.d("word", word + " Wid: " + wID + " start: " + startIndex
 					+ " end: " + endIndex);
 			for (Word wordss : words) {
-				Log.d("wordlist", wordss.getText());
+			//	Log.d("wordlist", wordss.getText());
 			}
 
 			wID++;

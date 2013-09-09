@@ -1,11 +1,5 @@
 package com.jogeeks.common;
 
-import android.graphics.Color;
-import android.text.Spannable;
-import android.text.Spanned;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.view.View;
 import android.widget.TextView;
 
 public class TextSpan {

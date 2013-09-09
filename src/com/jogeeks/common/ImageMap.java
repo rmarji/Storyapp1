@@ -8,8 +8,6 @@ import java.util.HashMap;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.jogeeks.storynumone.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
@@ -29,6 +27,8 @@ import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
 import android.widget.Scroller;
+
+import com.jogeeks.storynumone.R;
 
 public class ImageMap extends ImageView {
 	
