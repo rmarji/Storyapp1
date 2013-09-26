@@ -28,6 +28,7 @@
         </activity>
         <activity
             android:name="com.jogeeks.storynumone.SingleSceneActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_single_shot" >
         </activity>
     </application>

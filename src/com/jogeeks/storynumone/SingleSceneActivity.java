@@ -1,12 +1,19 @@
 package com.jogeeks.storynumone;
 
-import java.io.IOException;
-import java.util.StringTokenizer;
+import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -21,63 +28,111 @@ import android.widget.TextView;
 
 import com.jogeeks.common.Dialogs;
 import com.jogeeks.common.ImageMap;
-import com.jogeeks.storynumone.objects.Paragraph;
+import com.jogeeks.common.Splash;
 import com.jogeeks.storynumone.objects.Scene;
 import com.jogeeks.storynumone.objects.StoryPlayer;
-import com.jogeeks.storynumone.objects.TimeStamp;
-import com.jogeeks.storynumone.objects.Paragraph;
-import com.jogeeks.storynumone.objects.Scene;
 import com.jogeeks.storynumone.objects.Word;
+
+import com.jogeeks.pagecurl.CurlView;
+
+import com.jogeeks.pagecurl.CurlPage;
+import com.jogeeks.storynumone.R;
+
 
 public class SingleSceneActivity extends Activity {
 
+	private CurlView mCurlView;
+
 	private int SceneType;
 	private Dialogs JoGeeksDialogs;
-	public static TextView tv2;
-
+	public static TextView TopSubtitle;
+	private TextView BottomSubtitle;
+	
 	private ImageMap imageMap;
-
+	
 	public StoryPlayer play;
 	public Scene scene;
 	private Spannable sp;
+	private Splash SingleScene;
+	
+	private static final int REQUEST_CODE = 1234;
+
 	
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		SingleScene = new Splash(this);
+		SingleScene.setFullscreen();
+		
 		setContentView(R.layout.activity_single_shot);
+		
+		int index = 0;
+		if (getLastNonConfigurationInstance() != null) {
+			index = (Integer) getLastNonConfigurationInstance();
+		}
+		
+		mCurlView = (CurlView) findViewById(R.id.curl);
+		mCurlView.setPageProvider(new PageProvider());
+		mCurlView.setSizeChangedObserver(new SizeChangedObserver());
+		mCurlView.setCurrentIndex(index);
+		mCurlView.setBackgroundColor(0xFF202830);
+		
+		mCurlView.setEnableTouchPressure(true);
+		
+		TopSubtitle = (TextView) findViewById(R.id.topsubtitle);
+		BottomSubtitle = (TextView) findViewById(R.id.bottomsubtitle);
 
-		tv2 = (TextView) findViewById(R.id.textView2);
+        imageMap = (ImageMap)findViewById(R.id.map);
+		scene = new Scene(this, imageMap, R.drawable.map);
+		scene.setName("intro1");
 		
-		scene = new Scene(this);
-		
-		tv2.setText(scene.getParagraph().getText());
-		tv2.setText(applySpans(tv2));
+        imageMap.setNewScene(scene);
+        
+		//imageMap
+        TopSubtitle.setText(scene.getParagraph().getText());
+        TopSubtitle.setText(applySpans(TopSubtitle));
 		
 		//must be set here
 		scene.setSpannableText(sp);
 
 
+		applySpans(TopSubtitle);
+		//findViewById(R.id.map).setVisibility(4);
 
-		play = new StoryPlayer(this, scene);
-
-		try {
-			play.play();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		TopSubtitle.setMovementMethod(LinkMovementMethod.getInstance());
 		
-	//	applySpans(s,tv2);
+        imageMap.addOnImageMapClickedHandler(new ImageMap.OnImageMapClickedHandler() {
+            @Override
+            public void onImageMapClicked(int id) {
+            	Log.d("qqqqqqqqqq", "qqqqqqqq");
+            	imageMap.showBubble(id);
+            	play.playWord(imageMap.getName(id));
+            }
 
+            @Override
+            public void onBubbleClicked(int id) {
+                // react to info bubble for area being tapped
+            }
+        });
+    
 
-		applySpans(tv2);
-		findViewById(R.id.map).setVisibility(4);
+		
+		play = new StoryPlayer(this, scene);
+//
+//		try {
+//			play.play();
+//		} catch (IllegalStateException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
 
-		tv2.setMovementMethod(LinkMovementMethod.getInstance());
+	
 
 		JoGeeksDialogs = new Dialogs(getApplicationContext());
 
@@ -101,6 +156,17 @@ public class SingleSceneActivity extends Activity {
 		}
 	}
 
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+	    if (requestCode == REQUEST_CODE && resultCode == RESULT_OK)
+	    {
+	        // Populate the wordsList with the String values the recognition engine thought it heard
+	        ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+	        Log.d(matches.get(0), "test");
+	    }
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -156,14 +222,14 @@ public class SingleSceneActivity extends Activity {
 			String word = string.substring(startIndex, endIndex);
 
 			Log.d(word, Integer.toString(play.getCurrentMilliseconds()));
-					
-			tv2.setText(changeWordColor(changeWordSize(sp, startIndex, endIndex, 2), startIndex, endIndex, Color.GREEN));
+			play.playWord(word.toLowerCase());
+			TopSubtitle.setText(changeWordColor(changeWordSize(sp, startIndex, endIndex, 2), startIndex, endIndex, Color.GREEN));
 			
 			changeWordColor(sp, startIndex, endIndex, Color.GREEN);
 
 			sp.setSpan(new ForegroundColorSpan(Color.GREEN), startIndex,
 					endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			tv2.setText(sp);
+			TopSubtitle.setText(sp);
 
 		}
 
@@ -179,5 +245,144 @@ public class SingleSceneActivity extends Activity {
 		sp.setSpan(new ScaleXSpan(prop), start, end,
 				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		return sp;
+	}
+
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		mCurlView.onPause();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		mCurlView.onResume();
+	}
+
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return mCurlView.getCurrentIndex();
+	}
+
+	/**
+	 * Bitmap provider.
+	 */
+	private class PageProvider implements CurlView.PageProvider {
+
+		// Bitmap resources.
+		private int[] mBitmapIds = {R.drawable.intro1, R.drawable.intro2, R.drawable.intro3, 
+				R.drawable.intro4, R.drawable.intro5, R.drawable.intro6, R.drawable.intro7};
+
+		@Override
+		public int getPageCount() {
+			return 6;
+		}
+
+		private Bitmap loadBitmap(int width, int height, int index) {
+			Bitmap b = Bitmap.createBitmap(width, height,
+					Bitmap.Config.ARGB_8888);
+			b.eraseColor(0xFFFFFFFF);
+			Canvas c = new Canvas(b);
+			Drawable d = getResources().getDrawable(mBitmapIds[index]);
+
+			int margin = 0;
+			int border = 0;
+	
+			Rect r = new Rect(margin, margin, width - margin, height - margin);
+
+			int imageWidth = r.width();
+			int imageHeight = imageWidth * d.getIntrinsicHeight();
+					
+			if (imageHeight > r.height()) {
+				imageHeight = r.height();
+				imageWidth = imageHeight * d.getIntrinsicWidth();
+						
+			}
+
+//			r.left += ((r.width() - imageWidth) / 2) - border;
+//			r.right = r.left + imageWidth + border + border;
+//			r.top += ((r.height() - imageHeight) / 2) - border;
+//			r.bottom = r.top + imageHeight + border + border;
+
+//			Paint p = new Paint();
+//			p.setColor(0xFFC0C0C0);
+//			c.drawRect(r, p);
+//			r.left += border;
+//			r.right -= border;
+//			r.top += border;
+//			r.bottom -= border;
+
+			d.setBounds(r);
+			d.draw(c);
+
+			return BitmapFactory.decodeResource(getResources(),mBitmapIds[index]);
+		}
+
+		@Override
+		public void updatePage(CurlPage page, int width, int height, int index) {
+
+			switch (index) {
+			// First case is image on front side, solid colored back.
+			case 0: {
+				Bitmap front = loadBitmap(width, height, 0);
+				page.setTexture(front, CurlPage.SIDE_FRONT);
+				page.setColor(Color.rgb(255,255,255), CurlPage.SIDE_BACK);
+				break;
+			}
+			// Second case is image on back side, solid colored front.
+			case 1: {
+				Bitmap back = loadBitmap(width, height, 2);
+				page.setTexture(back, CurlPage.SIDE_BACK);
+				page.setColor(Color.rgb(255,255,255), CurlPage.SIDE_FRONT);
+				break;
+			}
+			// Third case is images on both sides.
+			case 2: {
+				Bitmap front = loadBitmap(width, height, 1);
+				Bitmap back = loadBitmap(width, height, 3);
+				page.setTexture(front, CurlPage.SIDE_FRONT);
+				page.setTexture(back, CurlPage.SIDE_BACK);
+				break;
+			}
+			// Fourth case is images on both sides - plus they are blend against
+			// separate colors.
+			case 3: {
+				Bitmap front = loadBitmap(width, height, 2);
+				Bitmap back = loadBitmap(width, height, 1);
+				page.setTexture(front, CurlPage.SIDE_FRONT);
+				page.setTexture(back, CurlPage.SIDE_BACK);
+				page.setColor(Color.argb(127, 170, 130, 255),
+						CurlPage.SIDE_FRONT);
+				page.setColor(Color.rgb(255,255,255), CurlPage.SIDE_BACK);
+				break;
+			}
+			// Fifth case is same image is assigned to front and back. In this
+			// scenario only one texture is used and shared for both sides.
+			case 4:
+				Bitmap front = loadBitmap(width, height, 0);
+				page.setTexture(front, CurlPage.SIDE_BOTH);
+				page.setColor(Color.argb(127, 255, 255, 255),
+						CurlPage.SIDE_BACK);
+				break;
+			}
+		}
+
+	}
+
+	/**
+	 * CurlView size changed observer.
+	 */
+	private class SizeChangedObserver implements CurlView.SizeChangedObserver {
+		@Override
+		public void onSizeChanged(int w, int h) {
+			if (w > h) {
+				mCurlView.setViewMode(CurlView.SHOW_TWO_PAGES);
+				mCurlView.setMargins(.1f, .05f, .1f, .05f);
+			} else {
+				mCurlView.setViewMode(CurlView.SHOW_ONE_PAGE);
+				mCurlView.setMargins(.1f, .1f, .1f, .1f);
+			}
+		}
 	}
 }

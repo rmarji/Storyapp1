@@ -22,6 +22,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
@@ -29,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.Scroller;
 
 import com.jogeeks.storynumone.R;
+import com.jogeeks.storynumone.objects.Scene;
 
 public class ImageMap extends ImageView {
 	
@@ -161,10 +163,19 @@ public class ImageMap extends ImageView {
 	 */
 	private void loadAttributes(AttributeSet attrs) {
 		TypedArray a = getContext().obtainStyledAttributes(attrs,R.styleable.ImageMap);
-		String map = a.getString(R.styleable.ImageMap_map);
+		String map = a.getString(R.styleable.ImageMap_tags);
 		if (map != null) {
 			loadMap(map);
 		}
+	}
+	
+	public void setNewScene(Scene s) {
+		setImageResource(s.getResource());
+		String map = s.getName();
+		if (map != null) {
+			loadMap(map);
+		}
+		
 	}
 	
 	/**
@@ -221,6 +232,7 @@ public class ImageMap extends ImageView {
 				            		 String attrName = xpp.getAttributeName(i);
 				            		 String attrVal = xpp.getAttributeValue(null,attrName);
 				            		 a.addValue(attrName, attrVal);
+				            		 //a.addValue(key, value)
 				            	 }
 		            		 }
 		            	 }		            	 		            	
@@ -313,9 +325,16 @@ public class ImageMap extends ImageView {
 		mBubbleMap.clear();
 		Area a = mIdToArea.get(areaId);
 		if (a != null) {
-			addBubble(a.getName(),areaId);
+			
+			addBubble(getAreaAttribute(areaId, "alt"),areaId);
 		}
 		invalidate();
+	}
+	
+	
+	public String getName(int areaId) {
+		Area a = mIdToArea.get(areaId);
+			return a.getName();
 	}
 	
 	public void centerArea( int areaId ) {
@@ -1179,6 +1198,7 @@ public class ImageMap extends ImageView {
     abstract class Area {
 		int _id;
 		String _name;
+		String _alt;
 		HashMap<String,String> _values;
 		Bitmap _decoration=null;
 		
@@ -1186,6 +1206,15 @@ public class ImageMap extends ImageView {
     		_id = id;
 			if (name != null) {
 				_name = name;
+			}
+    	}
+    	
+		//Overload to get area
+    	public Area(int id, String name, String alt) {
+    		_id = id;
+			if (name != null && alt != null) {
+				_name = name;
+				_alt = alt;
 			}
     	}
     			
@@ -1196,7 +1225,10 @@ public class ImageMap extends ImageView {
 		public String getName() {
 			return _name;
 		}
-		
+
+		public String getAlt(){
+			return _alt;
+		}
 		// all xml values for the area are passed to the object
 		// the default impl just puts them into a hashmap for
 		// retrieval later
@@ -1234,6 +1266,8 @@ public class ImageMap extends ImageView {
 		abstract boolean isInArea(float x, float y);
 		abstract float getOriginX();
 		abstract float getOriginY();
+		abstract float getWidth();
+
 	}
 	
     /**
@@ -1270,6 +1304,10 @@ public class ImageMap extends ImageView {
 		
 		public float getOriginY() {
 			return _top;
+		}
+		
+		public float getWidth(){
+			return _right - _left;
 		}
 	}
 	
@@ -1363,6 +1401,10 @@ public class ImageMap extends ImageView {
 			return _y;
 		}
 		
+		public float getWidth(){
+			return 0;
+		}
+		
 		/**
 		 * This is a java port of the 
 		 * W. Randolph Franklin algorithm explained here
@@ -1434,6 +1476,10 @@ public class ImageMap extends ImageView {
 		public float getOriginY() {
 			return _y;
 		}		
+		
+		public float getWidth(){
+			return 0;
+		}
 	}
 	
 	/**
@@ -1457,8 +1503,13 @@ public class ImageMap extends ImageView {
 		Bubble(String text, int areaId) {			
 			_a = mIdToArea.get(areaId);
 			if (_a != null) {
-				float x = _a.getOriginX();
+				float w = _a.getWidth();
+				float x = _a.getOriginX() + w/2;
 				float y = _a.getOriginY();
+				
+				
+				Log.d(Float.toString(x), Float.toString(w));
+
 				init(text,x,y);
 			}
 		}

@@ -18,14 +18,16 @@ public class Scene {
 	
 	private Paragraph par;
 	private ImageMap map;
+	private int image;
 	private TimeStamp tags;
 	private Spannable spaned;
 	
-	public Scene(Activity act){
+	public Scene(Activity act, ImageMap sceneMap, int res){
 		Constants s = new Constants();
 		
-		map = new ImageMap(act.getApplicationContext());
+		map = sceneMap;
 		Constants.Maps.add(map);
+		image = res;
 		
 		par = Constants.Paragraphs.get(getId());
 		map = Constants.Maps.get(getId());
@@ -67,4 +69,9 @@ public class Scene {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public int getResource(){
+		return image;
+	}
+
 }

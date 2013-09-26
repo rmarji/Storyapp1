@@ -1,6 +1,5 @@
 package com.jogeeks.storynumone.objects;
 
-import android.util.Log;
 
 public class TimeStamp{
 	public int current=0;
